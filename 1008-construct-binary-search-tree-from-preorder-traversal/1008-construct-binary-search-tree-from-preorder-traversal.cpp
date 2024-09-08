@@ -41,3 +41,32 @@ public:
         return bstConstructor (preorderCpy,preorder ,0 , 0, preorder.size()-1);
     }
 };
+
+
+
+   //APPROACH - 2
+    //THIS HAS A TIME COMMPLEXITY OF O(N) WHILE THE PREVIOUS METHODD HAVE TIME COMLEXITY OF O(LOGN)
+
+        TreeNode * helperFunction (vector<int>& preorder, int & index, int Lower, int Upper){
+            //base case
+            if(index == preorder.size() || preorder[index] < Lower || preorder[index] > Upper){
+                return NULL;
+            }
+
+            TreeNode * temp = new TreeNode(preorder[index++]);
+
+            temp->left = helperFunction(preorder, index, Lower, temp->val);
+            temp->right = helperFunction(preorder,index,  temp->val, Upper);
+
+
+            return temp;
+
+        }
+
+
+        TreeNode* bstFromPreorder(vector<int>& preorder) {
+            int index = 0;
+       
+       return helperFunction (preorder, index , INT_MIN, INT_MAX );
+    }
+};
