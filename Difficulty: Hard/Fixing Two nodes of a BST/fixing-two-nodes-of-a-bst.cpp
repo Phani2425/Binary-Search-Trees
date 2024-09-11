@@ -114,6 +114,9 @@ struct Node
 
 class Solution {
   public:
+  
+  //THIS APPROCH HAVE A TIME COMPLEXITY OF O(N) AND SPACE COMPLESITY OF O(N) [DUE TO THE STACK]
+  
     void correctBST( struct Node* root )
     {
         Node *first = NULL, *sec = NULL;
@@ -167,6 +170,66 @@ class Solution {
         first->data = sec->data;
         sec->data = firstData;
     }
+    
+    
+    
+    // SOLVING THIS WITH A TIME COMPLEXITY OF O(N) BUT WITH A OPTIMISED SPACE COMPLEXITY OF O(1)
+    
+    
+    ///DEKH BHAI E PROBLEM SOLVE KARIBA PAIN TATE FOR SURE INORDER TRAVERSAL KARIBAKU HNI PADIBA AU EMITI KOU METHOID ACHI JOUTA O(1) S.C RE 
+    // INORDER TRAVERSAL KARIPARIBA????  NOT RECURSION, NOT STACK AGAR RECURSION ME KIS TARAH HO BHI GAYA THEN ALSO SEMANANKU COMAPRE KARIBA PAIN STORE KARIBAKU PADIBA AU SETHIPAIN BI SPACE LAGIBA
+    
+    //ONLY WAY WHICH DOES INORDER TRAVERSAL WITH CONSTANT TIME COMPLEXITY IS TEH " MORRIS TRAVERSAL "
+    //AB MORRIS TRAVERSAL KOI KESE BHUL SKATA HAI...😁😁😁😁
+    
+    void correctBST( struct Node* root )
+    {
+       Node* first = NULL, * sec = NULL;
+       //now i will initalise the prevNode with the 1st node of inorder traversal or the leftmost node of the bst
+       Node* temp = root;
+       while(temp->left){
+           temp=temp->left;//this temp will go and stop at the left most node of the BST
+       }
+       Node* prevNode = temp;
+       
+       //starting MORRIS TRVAERSAL
+       while(root){//morris trversal setebela jae chaliba jetebela jae root null na heichi bcs at last after trversing all the node it will gte null by going to the right of the right most node of the tree according to the morrid traversal
+           if(root->left){
+               Node* dummy = root->left;
+               while(dummy->right != NULL && dummy->right != root){
+                   dummy = dummy->right;
+               }
+               if(dummy->right == NULL){
+                   dummy->right = root;//connection made with node
+                   root = root->left;//ab left me jao
+                   continue;
+               }
+               else{
+                   dummy->right = NULL; // i forgot to remove the link that is why i was getting wrong answer ... so i will never forget to remove link in morris traversal again
+               }
+           }
+           
+           if(root->data < prevNode->data){
+               if(first == NULL){
+                   first = prevNode;
+                   sec = root;
+               }
+               else{
+                   sec = root;
+               }
+           }
+           
+           prevNode = root;
+           root=root->right;
+       }
+       
+       int firstData = first->data;
+       first->data = sec->data;
+       sec->data = firstData;
+       
+    }
+    
+    
 };
 
 
