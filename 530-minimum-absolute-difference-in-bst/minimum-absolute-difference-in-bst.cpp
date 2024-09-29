@@ -53,13 +53,12 @@ public:
         }
 
         helperFunction(root->left, prev, minDiff);
-        if(prev==NULL){
-            prev = root;
-        }
-        else{
+        if(prev!=NULL){
             minDiff = min(minDiff, (root->val - prev->val));
+        }  
+        
             prev = root;
-        }
+        
         helperFunction(root->right, prev, minDiff);
 
 
