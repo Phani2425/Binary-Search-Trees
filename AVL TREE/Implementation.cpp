@@ -54,20 +54,33 @@ int getHeight (Node* root){
 //functions for rotations
 Node* leftRotation(Node * root){
 
-    Node * ret = root->right;
-    Node* temp = root->right->left;
-    root->right->left = root;
+    Node * child = root->right;
+    Node* temp = child->left;
+    child->left = root;
     root->right = temp;
-    return ret;
+    //height update karna to me bhul hi gaya tha
+    //kyu ki root aur uski right node ki place change hui hai {hmm aur kisiska height change nehi hua gaur se dekho} to hame unka height update karna padega
+
+    //aur ek imp baat height updation ka bhi ek order hai means first root ka height update hoga jo abhi niche agay hai then jake child ka height update hoga jo ki abhi root ka parent banagay hai 
+    root->height = 1 + max(getHeight(root->left), getHeight(root->right));
+    child->height = 1 + max(getHeight(child->left), getHeight(child->right));
+
+    return child;
 
 }
 
 Node* rightRotation(Node * root){
-    Node * ret = root->left;
-    Node* temp =  root->left->right;
-    root->left->right = root;
+    Node * child = root->left;
+    Node* temp =  child->right;
+    child->right = root;
     root->left = temp;
-    return ret;
+
+    //yaha pe bhi simillarly height update hoga
+
+    root->height = 1 + max(getHeight(root->left), getHeight(root->right));
+    child->height = 1 + max(getHeight(child->left), getHeight(child->right));
+
+    return child;
 }
 
 Node* insert (Node* root,int value){
