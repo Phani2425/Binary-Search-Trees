@@ -82,6 +82,34 @@ class Solution {
     }
 };
 
+
+
+// OPTIMISING THE 2ND APPROACH BY SINGLE STACK
+class Solution {
+  public:
+  
+    int canRepresentBST(int arr[], int N) {
+       stack<pair<int,int>> st;
+       st.push({INT_MIN,INT_MAX});
+       int index = 0;
+       while(!st.empty()){
+           auto temp = st.top();
+           st.pop();
+           
+           if(index < N && arr[index] > temp.first && arr[index] < temp.second){
+
+               st.push({arr[index],temp.second});
+               st.push({temp.first,arr[index]});
+               index++;
+           }
+       }
+       
+       return index == N;
+    }
+};
+
+
+
 //{ Driver Code Starts.
 int main() {
     int t;
