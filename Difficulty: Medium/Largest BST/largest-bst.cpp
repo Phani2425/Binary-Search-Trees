@@ -98,168 +98,62 @@ struct Node {
         left = right = NULL;
     }
 };*/
-
-// class Box {
-    
-//     public:
-//     bool bst;
-//     int size;
-//     int max;
-//     int min;
-    
-//     Box (int value){
-//         bst = 1;
-//         size = 1;
-//         max = value;
-//         min = value;
-//     }
-    
-// };
-
-// class Solution{
-//     public:
-    
-//     Box * find(Node * root, int & SizeofLargestBst){
-//         //if current root is a leaf node
-//         if(!root->left && !root->right){
-//             return new Box(root->data);
-//         }
-//         //if current node have only left side subtree
-//         else if(!root->right){
-//             Box * head = find(root->left, SizeofLargestBst);
-//             if(head->bst && root->data > head->max){
-//                 head->size++;
-//                 head->max = root->data;
-//                 SizeofLargestBst = max(SizeofLargestBst, head->size);
-//                 return head;
-//             }
-//             else{
-//                 head->bst = 0;
-//                 return head;
-//             }
-//         }
-        
-//         //if current node have only right subtree
-//         else if(!root->left){
-//             Box * head = find(root->right, SizeofLargestBst);
-//             if(head->bst && root->data < head->min){
-//                 head->size++;
-//                 head->min = root->data;
-//                 SizeofLargestBst = max(SizeofLargestBst, head->size);
-//                 return head;
-//             }
-//             else{
-//                 head->bst = 0;
-//                 return head;
-//             }
-//         }
-        
-//         //if current node have both side subtrees
-//         else{
-//             Box * leftHead = find(root->left, SizeofLargestBst);
-//             Box * rightHead = find(root->right, SizeofLargestBst);
-            
-//             if(leftHead->bst && rightHead->bst && root->data > leftHead->max && root->data < rightHead->min){
-//                 leftHead->size = leftHead->size + rightHead->size + 1;
-//                 SizeofLargestBst = max(SizeofLargestBst, leftHead->size);
-//                 leftHead->max = rightHead->max;
-//                 return leftHead;
-                
-//             }
-//             else{
-//                 leftHead->bst = 0;
-//                 return leftHead;
-//             }
-//         }
-//     }
-    
-//     /*You are required to complete this method */
-//     // Return the size of the largest sub-tree which is also a BST
-//     int largestBst(Node *root)
-//     {
-//         // i have taken it 1 because in any case the size of largest bst will be 1 which will be the leaf node size as leaf node will be the bst in all cases
-//     	int SizeofLargestBst = 1;
-//     	find (root, SizeofLargestBst);
-    	
-//     	return SizeofLargestBst;
-//     }
-// };
-
-
-
-
-//IN THE PREVIOUS WAY WE WERE HANDLING 4 CASES:-
-// 1. LEAF NODE
-// 2. ONLY LEFT EXIST
-// 3. ONLY RIGHT SIDE EXISTS
-// 4. BOTH SIDE EXISTS
-
-//AND WE HAVE TO HANDLE ALL THESE CASESS BECAUSE WE ARE NOT HANDLING THE NULL NODE CORRECTLY SO IF WE WILL HANDLE THE NULL NODE CORRECTLY THEN WE DO NOT HAVE TO HANDLE FIRST 3 CASESS SEPARATELY 
-//BECAUSE ALL OF THEM WILL BE HANDLED AUTOMATICALLY IN A SINGLE CASE
-
-//SO WAY-2 [HERE WE WILL HANDLE THE NULL NODE OPTIMALLY]
-
-
-class Box {
-    
+ 
+ 
+class Box{
     public:
-    bool bst;
-    int size;
     int max;
     int min;
+    int size;
+    bool isBst;
     
-    Box (){
-        bst = 1;
-        size = 0;
-        max = INT_MIN;
-        min = INT_MAX;
+    
+    Box(int mx,int mn,bool bst,int s){
+        max=mx;
+        min=mn;
+        isBst=bst;
+        size=s;
     }
-    
 };
+
+
 
 class Solution{
     public:
     
-    Box * find(Node * root, int & SizeofLargestBst){
-           //ROOT DOESN'T EXIST
-           if(!root){
-               return new Box();
-           }
-           
-           //ROOT EXISTS
-           Box * leftHead = find(root->left, SizeofLargestBst);
-           Box* rightHead = find(root->right, SizeofLargestBst);
-           
-           if(leftHead->bst && rightHead->bst && root->data > leftHead->max && root->data < rightHead->min){
-               Box* head= new Box();
-               head->size = leftHead->size + rightHead->size + 1;
-               head->min = min(root->data, leftHead->min);
-               head->max = max(root->data, rightHead->max);
-               
-               SizeofLargestBst = max(SizeofLargestBst, head->size);
-               return head;
-               
-           }
-           else{
-               leftHead->bst = 0;
-               return leftHead;
-           }
+    int ans = 0;
+    
+    Box* helperFun(Node* root){
+    if(!root){
+        Box* temp = new Box(INT_MIN,INT_MAX,true,0);
+        return temp;
     }
     
+    Box* left = helperFun(root->left);
+    Box* right = helperFun(root->right);
+    
+    if(left->isBst && right->isBst && root->data > left->max && root->data < right->min){
+        ans = max(ans,(left->size+right->size+1));
+        Box* temp = new Box(max(right->max,root->data),min(left->min,root->data),true,(left->size+right->size+1));
+        return temp;
+    }
+    else{
+        left->isBst = false;
+        return left;
+    }
+    
+    
+}
+
     /*You are required to complete this method */
     // Return the size of the largest sub-tree which is also a BST
     int largestBst(Node *root)
     {
-        // i have taken it 1 because in any case the size of largest bst will be 1 which will be the leaf node size as leaf node will be the bst in all cases
-    	int SizeofLargestBst = 0;
-    	find (root, SizeofLargestBst);
+    	helperFun(root);
     	
-    	return SizeofLargestBst;
+    	return ans;
     }
 };
-
-
-
 
 //{ Driver Code Starts.
 
